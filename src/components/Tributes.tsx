@@ -26,7 +26,7 @@ export default function Tributes({
   const [tributes, setTributes] = useState<Tribute[]>(initialTributes);
   const [totalCount, setTotalCount] = useState(initialTributes.length);
   const [currentPage, setCurrentPage] = useState(1);
-  const PAGE_SIZE = 10;
+  const PAGE_SIZE = 5;
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
   const [relationship, setRelationship] = useState("");
@@ -437,7 +437,7 @@ export default function Tributes({
               )}
             </div>
 
-            {/* Pagination controls in groups of 10 */}
+            {/* Pagination controls in groups of 5 */}
             {Math.ceil(tributes.length / PAGE_SIZE) > 1 && (
               <div
                 className="mt-5 pt-4 flex items-center justify-between flex-wrap gap-3 border-t"
