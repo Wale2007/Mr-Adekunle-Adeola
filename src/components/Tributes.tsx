@@ -181,7 +181,7 @@ export default function Tributes({ initialTributes = [] }: TributesProps) {
                 <input
                   type="text"
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
                   placeholder="Enter your name"
                   maxLength={100}
                   className="w-full px-4 py-3 rounded-xl text-sm transition-all duration-200 outline-none"
@@ -209,7 +209,7 @@ export default function Tributes({ initialTributes = [] }: TributesProps) {
                 <input
                   type="text"
                   value={relationship}
-                  onChange={(e) => setRelationship(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRelationship(e.target.value)}
                   placeholder="e.g. Friend, Colleague, Family"
                   maxLength={80}
                   className="w-full px-4 py-3 rounded-xl text-sm transition-all duration-200 outline-none"
@@ -230,7 +230,7 @@ export default function Tributes({ initialTributes = [] }: TributesProps) {
                 </label>
                 <textarea
                   value={message}
-                  onChange={(e) => setMessage(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setMessage(e.target.value)}
                   placeholder="Share your tribute..."
                   rows={5}
                   maxLength={2000}
@@ -244,13 +244,13 @@ export default function Tributes({ initialTributes = [] }: TributesProps) {
               </div>
 
               {/* Honeypot — hidden from real users */}
-              <div className="hidden" aria-hidden="true">
+              <div className="hidden" aria-hidden={true}>
                 <label>
                   Leave this field empty
                   <input
                     type="text"
                     value={honeypot}
-                    onChange={(e) => setHoneypot(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setHoneypot(e.target.value)}
                     tabIndex={-1}
                     autoComplete="off"
                   />
