@@ -51,16 +51,6 @@ export default function Footer() {
           &ldquo;Precious in the sight of the Lord is the death of his faithful
           servants.&rdquo; &mdash; Psalm 116:15
         </p>
-
-        <div className="mt-8 pt-6 border-t border-champagne/60 flex items-center justify-center">
-          <a
-            href="/print"
-            className="text-xs font-medium tracking-wide transition-colors hover:underline inline-flex items-center gap-1.5"
-            style={{ color: "var(--color-gold-dark)" }}
-          >
-            <span>🖨️</span> Print A4 Memorial Tribute Card with QR Code
-          </a>
-        </div>
       </div>
     </footer>
   );

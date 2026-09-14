@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Heart, Send, MessageCircle } from "lucide-react";
+import Link from "next/link";
+import { Heart, Send, MessageCircle, ChevronLeft, ChevronRight, ArrowLeft } from "lucide-react";
 
 interface Tribute {
   id: string;
@@ -13,11 +14,19 @@ interface Tribute {
 
 interface TributesProps {
   initialTributes?: Tribute[];
+  showSeeAll?: boolean;
+  isDedicatedPage?: boolean;
 }
 
-export default function Tributes({ initialTributes = [] }: TributesProps) {
+export default function Tributes({
+  initialTributes = [],
+  showSeeAll = true,
+  isDedicatedPage = false,
+}: TributesProps) {
   const [tributes, setTributes] = useState<Tribute[]>(initialTributes);
   const [totalCount, setTotalCount] = useState(initialTributes.length);
+  const [currentPage, setCurrentPage] = useState(1);
+  const PAGE_SIZE = 10;
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
   const [relationship, setRelationship] = useState("");
@@ -90,6 +99,7 @@ export default function Tributes({ initialTributes = [] }: TributesProps) {
         setMessage("");
         setRelationship("");
         setSubmitted(true);
+        setCurrentPage(1);
         setTimeout(() => setSubmitted(false), 4000);
         fetchTributes();
       } else {
@@ -129,6 +139,25 @@ export default function Tributes({ initialTributes = [] }: TributesProps) {
       style={{ backgroundColor: "var(--color-cream)" }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Back link on dedicated page */}
+        {isDedicatedPage && (
+          <div className="mb-6">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold px-4 py-2 rounded-full transition-all duration-200 hover:scale-105"
+              style={{
+                backgroundColor: "var(--color-ivory)",
+                color: "var(--color-gold-dark)",
+                border: "1px solid var(--color-champagne)",
+                boxShadow: "0 2px 8px rgba(184, 134, 11, 0.05)",
+              }}
+            >
+              <ArrowLeft size={16} />
+              Back to Memorial Home
+            </Link>
+          </div>
+        )}
+
         {/* Section header */}
         <div className="mb-12">
           <p
@@ -142,7 +171,7 @@ export default function Tributes({ initialTributes = [] }: TributesProps) {
               className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl md:text-5xl font-bold"
               style={{ color: "var(--color-text-primary)" }}
             >
-              Share a Memory
+              {isDedicatedPage ? "All Tributes & Memories" : "Share a Memory"}
             </h2>
 
             {/* Total tributes badge */}
@@ -288,25 +317,41 @@ export default function Tributes({ initialTributes = [] }: TributesProps) {
 
           {/* Tribute feed */}
           <div>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
               <h3
                 className="font-[family-name:var(--font-heading)] text-xl font-bold"
                 style={{ color: "var(--color-text-primary)" }}
               >
                 Messages & Memories
               </h3>
-              <span
-                className="text-xs font-semibold px-3 py-1 rounded-full"
-                style={{
-                  backgroundColor: "var(--color-champagne)",
-                  color: "var(--color-gold-dark)",
-                }}
-              >
-                {tributes.length} {tributes.length === 1 ? "Tribute" : "Tributes"}
-              </span>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span
+                  className="text-xs font-semibold px-3 py-1 rounded-full"
+                  style={{
+                    backgroundColor: "var(--color-champagne)",
+                    color: "var(--color-gold-dark)",
+                  }}
+                >
+                  {tributes.length} {tributes.length === 1 ? "Tribute" : "Tributes"}
+                </span>
+                {showSeeAll && (
+                  <Link
+                    href="/tributes"
+                    className="inline-flex items-center gap-1 text-xs font-semibold px-3.5 py-1 rounded-full transition-all duration-200 hover:scale-105"
+                    style={{
+                      backgroundColor: "rgba(212, 175, 55, 0.12)",
+                      color: "var(--color-gold-dark)",
+                      border: "1px solid var(--color-champagne)",
+                    }}
+                  >
+                    See All Tributes &rarr;
+                  </Link>
+                )}
+              </div>
             </div>
 
-            <div className="space-y-4 max-h-[600px] overflow-y-auto pr-1">
+            {/* Tribute cards container */}
+            <div className="space-y-4 max-h-[640px] overflow-y-auto pr-1">
               {tributes.length === 0 ? (
                 <div
                   className="text-center py-16 px-6 rounded-2xl"
@@ -334,61 +379,169 @@ export default function Tributes({ initialTributes = [] }: TributesProps) {
                   </p>
                 </div>
               ) : (
-                tributes.map((tribute) => (
-                  <div
-                    key={tribute.id}
-                    className="tribute-card rounded-2xl p-6"
-                    style={{
-                      backgroundColor: "var(--color-ivory)",
-                      border: "1px solid var(--color-champagne)",
-                    }}
-                  >
-                    {/* Author & Relationship & Time Header */}
-                    <div className="flex items-center justify-between gap-3 flex-wrap mb-3">
-                      <div className="flex items-center gap-2.5 flex-wrap">
-                        <span
-                          className="font-[family-name:var(--font-heading)] font-bold text-base sm:text-lg"
-                          style={{ color: "var(--color-text-primary)" }}
-                        >
-                          {tribute.name}
-                        </span>
-                        {tribute.relationship && (
-                          <span
-                            className="text-xs font-medium px-2.5 py-0.5 rounded-full"
-                            style={{
-                              backgroundColor: "var(--color-champagne)",
-                              color: "var(--color-gold-dark)",
-                            }}
-                          >
-                            {tribute.relationship}
-                          </span>
-                        )}
-                      </div>
-                      <span
-                        className="text-xs"
-                        style={{ color: "var(--color-text-muted)" }}
-                      >
-                        {timeAgo(tribute.createdAt)}
-                      </span>
-                    </div>
-
-                    {/* Subtle hairline divider */}
+                tributes
+                  .slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
+                  .map((tribute) => (
                     <div
-                      className="w-full h-[1px] mb-3"
-                      style={{ backgroundColor: "var(--color-champagne)", opacity: 0.6 }}
-                    />
-
-                    {/* Message content */}
-                    <p
-                      className="text-sm sm:text-[15px] leading-relaxed"
-                      style={{ color: "var(--color-text-secondary)" }}
+                      key={tribute.id}
+                      className="tribute-card rounded-2xl p-6"
+                      style={{
+                        backgroundColor: "var(--color-ivory)",
+                        border: "1px solid var(--color-champagne)",
+                      }}
                     >
-                      &ldquo;{tribute.message}&rdquo;
-                    </p>
-                  </div>
-                ))
+                      {/* Author & Relationship & Time Header */}
+                      <div className="flex items-center justify-between gap-3 flex-wrap mb-3">
+                        <div className="flex items-center gap-2.5 flex-wrap">
+                          <span
+                            className="font-[family-name:var(--font-heading)] font-bold text-base sm:text-lg"
+                            style={{ color: "var(--color-text-primary)" }}
+                          >
+                            {tribute.name}
+                          </span>
+                          {tribute.relationship && (
+                            <span
+                              className="text-xs font-medium px-2.5 py-0.5 rounded-full"
+                              style={{
+                                backgroundColor: "var(--color-champagne)",
+                                color: "var(--color-gold-dark)",
+                              }}
+                            >
+                              {tribute.relationship}
+                            </span>
+                          )}
+                        </div>
+                        <span
+                          className="text-xs"
+                          style={{ color: "var(--color-text-muted)" }}
+                        >
+                          {timeAgo(tribute.createdAt)}
+                        </span>
+                      </div>
+
+                      {/* Subtle hairline divider */}
+                      <div
+                        className="w-full h-[1px] mb-3"
+                        style={{ backgroundColor: "var(--color-champagne)", opacity: 0.6 }}
+                      />
+
+                      {/* Message content */}
+                      <p
+                        className="text-sm sm:text-[15px] leading-relaxed"
+                        style={{ color: "var(--color-text-secondary)" }}
+                      >
+                        &ldquo;{tribute.message}&rdquo;
+                      </p>
+                    </div>
+                  ))
               )}
             </div>
+
+            {/* Pagination controls in groups of 10 */}
+            {Math.ceil(tributes.length / PAGE_SIZE) > 1 && (
+              <div
+                className="mt-5 pt-4 flex items-center justify-between flex-wrap gap-3 border-t"
+                style={{ borderColor: "var(--color-champagne)" }}
+              >
+                <span
+                  className="text-xs font-medium"
+                  style={{ color: "var(--color-text-muted)" }}
+                >
+                  Showing {(currentPage - 1) * PAGE_SIZE + 1}–
+                  {Math.min(currentPage * PAGE_SIZE, tributes.length)} of{" "}
+                  {tributes.length}
+                </span>
+
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    disabled={currentPage === 1}
+                    onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
+                    style={{
+                      backgroundColor: "var(--color-ivory)",
+                      color: "var(--color-text-primary)",
+                      border: "1px solid var(--color-champagne)",
+                    }}
+                    aria-label="Previous page"
+                  >
+                    <ChevronLeft size={14} />
+                    Prev
+                  </button>
+
+                  {Array.from(
+                    { length: Math.ceil(tributes.length / PAGE_SIZE) },
+                    (_, i) => i + 1
+                  ).map((pageNum) => {
+                    const totalPages = Math.ceil(tributes.length / PAGE_SIZE);
+                    if (
+                      totalPages > 6 &&
+                      pageNum !== 1 &&
+                      pageNum !== totalPages &&
+                      Math.abs(pageNum - currentPage) > 1
+                    ) {
+                      if (pageNum === 2 || pageNum === totalPages - 1) {
+                        return (
+                          <span
+                            key={pageNum}
+                            className="text-xs px-1"
+                            style={{ color: "var(--color-text-muted)" }}
+                          >
+                            ...
+                          </span>
+                        );
+                      }
+                      return null;
+                    }
+
+                    const isCurrent = pageNum === currentPage;
+                    return (
+                      <button
+                        key={pageNum}
+                        type="button"
+                        onClick={() => setCurrentPage(pageNum)}
+                        className="w-7 h-7 rounded-lg text-xs font-semibold flex items-center justify-center transition-all duration-200"
+                        style={{
+                          backgroundColor: isCurrent
+                            ? "var(--color-gold-dark)"
+                            : "var(--color-ivory)",
+                          color: isCurrent ? "#ffffff" : "var(--color-text-primary)",
+                          border: `1px solid ${
+                            isCurrent
+                              ? "var(--color-gold-dark)"
+                              : "var(--color-champagne)"
+                          }`,
+                        }}
+                      >
+                        {pageNum}
+                      </button>
+                    );
+                  })}
+
+                  <button
+                    type="button"
+                    disabled={
+                      currentPage === Math.ceil(tributes.length / PAGE_SIZE)
+                    }
+                    onClick={() =>
+                      setCurrentPage((p) =>
+                        Math.min(p + 1, Math.ceil(tributes.length / PAGE_SIZE))
+                      )
+                    }
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
+                    style={{
+                      backgroundColor: "var(--color-ivory)",
+                      color: "var(--color-text-primary)",
+                      border: "1px solid var(--color-champagne)",
+                    }}
+                    aria-label="Next page"
+                  >
+                    Next
+                    <ChevronRight size={14} />
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
