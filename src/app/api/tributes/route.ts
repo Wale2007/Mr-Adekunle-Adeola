@@ -1,6 +1,17 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+const DEFAULT_FALLBACK_TRIBUTES = [
+  {
+    id: "seed-1",
+    name: "Ola-salawu Olawale",
+    relationship: "Friend",
+    message:
+      "A great man, a dear friend, and a true inspiration to all who had the privilege of knowing him. Your kindness, warmth, and legacy will live in our hearts forever. Rest in perfect peace, Baba White.",
+    createdAt: new Date().toISOString(),
+  },
+];
+
 // GET /api/tributes — Fetch all tributes, newest first
 export async function GET() {
   try {
@@ -24,6 +35,8 @@ export async function GET() {
         total = 1;
       } catch (seedErr) {
         console.warn("Auto-seed skipped:", seedErr);
+        tributes = DEFAULT_FALLBACK_TRIBUTES;
+        total = DEFAULT_FALLBACK_TRIBUTES.length;
       }
     }
 
@@ -32,11 +45,11 @@ export async function GET() {
       total,
     });
   } catch (error) {
-    console.error("Error fetching tributes:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch tributes" },
-      { status: 500 }
-    );
+    console.error("Error fetching tributes from DB:", error);
+    return NextResponse.json({
+      tributes: DEFAULT_FALLBACK_TRIBUTES,
+      total: DEFAULT_FALLBACK_TRIBUTES.length,
+    });
   }
 }
 
