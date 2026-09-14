@@ -13,11 +13,23 @@ export const metadata: Metadata = {
     "funeral",
     "Abeokuta",
   ],
+  icons: {
+    icon: "/images/baba-white-regal-navy.jpg",
+    apple: "/images/baba-white-regal-navy.jpg",
+  },
   openGraph: {
     title: "In Loving Memory of Adekunle Stephen Adeola (Baba White)",
     description:
       "Celebrating a life of grace — August 24, 1970 – September 9, 2026",
     type: "website",
+    images: [
+      {
+        url: "/images/baba-white-regal-navy.jpg",
+        width: 800,
+        height: 1000,
+        alt: "Adekunle Stephen Adeola - Baba White",
+      },
+    ],
   },
 };
 
@@ -29,6 +41,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="icon" href="/images/baba-white-regal-navy.jpg" type="image/jpeg" />
+        <link rel="apple-touch-icon" href="/images/baba-white-regal-navy.jpg" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
