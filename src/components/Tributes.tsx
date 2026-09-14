@@ -391,20 +391,52 @@ export default function Tributes({
                       }}
                     >
                       {/* Author & Relationship & Time Header */}
-                      <div className="flex items-center justify-between gap-3 flex-wrap mb-3">
-                        <div className="flex items-center gap-2.5 flex-wrap">
+                      <div
+                        className="flex items-start sm:items-center justify-between gap-2.5 flex-wrap mb-3"
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          gap: "8px 12px",
+                          flexWrap: "wrap",
+                        }}
+                      >
+                        <div
+                          className="flex items-center gap-2.5 flex-wrap min-w-0"
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px 10px",
+                            flexWrap: "wrap",
+                            minWidth: 0,
+                          }}
+                        >
                           <span
-                            className="font-[family-name:var(--font-heading)] font-bold text-base sm:text-lg"
-                            style={{ color: "var(--color-text-primary)" }}
+                            className="font-bold text-base sm:text-lg break-words"
+                            style={{
+                              fontFamily: "var(--font-heading)",
+                              color: "var(--color-text-primary)",
+                              wordBreak: "break-word",
+                              overflowWrap: "break-word",
+                              lineHeight: "1.3",
+                            }}
                           >
                             {tribute.name}
                           </span>
                           {tribute.relationship && (
                             <span
-                              className="text-xs font-medium px-2.5 py-0.5 rounded-full"
+                              className="text-xs font-medium rounded-full shrink-0"
                               style={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                                padding: "2px 10px",
                                 backgroundColor: "var(--color-champagne)",
                                 color: "var(--color-gold-dark)",
+                                flexShrink: 0,
+                                whiteSpace: "nowrap",
+                                fontSize: "11px",
+                                fontWeight: 600,
+                                lineHeight: "1.4",
                               }}
                             >
                               {tribute.relationship}
@@ -412,8 +444,13 @@ export default function Tributes({
                           )}
                         </div>
                         <span
-                          className="text-xs"
-                          style={{ color: "var(--color-text-muted)" }}
+                          className="text-xs shrink-0"
+                          style={{
+                            color: "var(--color-text-muted)",
+                            flexShrink: 0,
+                            whiteSpace: "nowrap",
+                            fontSize: "12px",
+                          }}
                         >
                           {timeAgo(tribute.createdAt)}
                         </span>
@@ -427,8 +464,14 @@ export default function Tributes({
 
                       {/* Message content */}
                       <p
-                        className="text-sm sm:text-[15px] leading-relaxed"
-                        style={{ color: "var(--color-text-secondary)" }}
+                        className="text-sm sm:text-[15px] leading-relaxed whitespace-pre-line break-words"
+                        style={{
+                          color: "var(--color-text-secondary)",
+                          whiteSpace: "pre-line",
+                          wordBreak: "break-word",
+                          overflowWrap: "break-word",
+                          lineHeight: "1.65",
+                        }}
                       >
                         &ldquo;{tribute.message}&rdquo;
                       </p>
