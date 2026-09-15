@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
-import { Heart, Send, MessageCircle, ChevronLeft, ChevronRight, ArrowLeft } from "lucide-react";
+import { Heart, Send, MessageCircle, ChevronLeft, ChevronRight, ArrowLeft, Printer } from "lucide-react";
 
 interface Tribute {
   id: string;
@@ -174,16 +174,32 @@ export default function Tributes({
               {isDedicatedPage ? "All Tributes & Memories" : "Share a Memory"}
             </h2>
 
-            {/* Total tributes badge */}
-            <div
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold self-start sm:self-auto"
-              style={{
-                backgroundColor: "var(--color-champagne)",
-                color: "var(--color-gold-dark)",
-              }}
-            >
-              <MessageCircle size={16} />
-              Total Tributes: {totalCount}
+            {/* Total tributes badge & PDF button */}
+            <div className="flex items-center gap-2.5 flex-wrap self-start sm:self-auto">
+              <div
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold"
+                style={{
+                  backgroundColor: "var(--color-champagne)",
+                  color: "var(--color-gold-dark)",
+                }}
+              >
+                <MessageCircle size={16} />
+                Total Tributes: {totalCount}
+              </div>
+
+              <Link
+                href="/tributes/pdf"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 hover:scale-105"
+                style={{
+                  backgroundColor: "rgba(212, 175, 55, 0.12)",
+                  color: "var(--color-gold-dark)",
+                  border: "1px solid var(--color-gold)",
+                }}
+                title="View and download all tributes in a printer-ready PDF book"
+              >
+                <Printer size={15} />
+                Save / Print as PDF
+              </Link>
             </div>
           </div>
         </div>
