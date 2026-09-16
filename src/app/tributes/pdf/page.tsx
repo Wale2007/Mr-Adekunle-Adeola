@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import TributesPdfView from "@/components/TributesPdfView";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: "Memorial Tributes Book (PDF) — Adekunle Stephen Adeola (Baba White)",
   description:

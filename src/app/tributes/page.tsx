@@ -3,6 +3,9 @@ import Tributes from "@/components/Tributes";
 import Footer from "@/components/Footer";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: "Tributes & Fond Memories — Adekunle Stephen Adeola (Baba White)",
   description:

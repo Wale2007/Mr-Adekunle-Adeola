@@ -6,6 +6,9 @@ import Tributes from "@/components/Tributes";
 import Footer from "@/components/Footer";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 const DEFAULT_TRIBUTES = [
   {
     id: "seed-1",

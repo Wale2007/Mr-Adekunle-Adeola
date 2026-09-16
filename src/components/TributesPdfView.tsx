@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Printer, ArrowLeft, Heart, BookOpen } from "lucide-react";
+import { Printer, ArrowLeft, Heart, BookOpen, RefreshCw } from "lucide-react";
 
 interface Tribute {
   id: string;
@@ -18,6 +18,33 @@ interface Props {
 }
 
 export default function TributesPdfView({ tributes }: Props) {
+  const [tributesList, setTributesList] = useState<Tribute[]>(tributes);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetchLiveTributes = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      const res = await fetch("/api/tributes?t=" + Date.now(), {
+        cache: "no-store",
+        headers: { "Cache-Control": "no-cache" },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.tributes && Array.isArray(data.tributes)) {
+          setTributesList(data.tributes);
+        }
+      }
+    } catch {
+      // keep existing tributes
+    } finally {
+      setRefreshing(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchLiveTributes();
+  }, [fetchLiveTributes]);
+
   const handlePrint = () => {
     if (typeof window !== "undefined") {
       window.print();
@@ -117,11 +144,27 @@ export default function TributesPdfView({ tributes }: Props) {
             </Link>
             <div className="flex items-center gap-1.5 text-xs font-medium" style={{ color: "#9B8E7B" }}>
               <BookOpen size={14} style={{ color: "#B8860B" }} />
-              <span>{tributes.length} Tributes Recorded</span>
+              <span>{tributesList.length} Tributes Recorded</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={fetchLiveTributes}
+              disabled={refreshing}
+              type="button"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer disabled:opacity-50"
+              style={{
+                backgroundColor: "#FAF6EE",
+                color: "#6B5B3E",
+                border: "1px solid #E8DCC8",
+              }}
+              title="Refresh with latest tributes"
+            >
+              <RefreshCw size={13} className={refreshing ? "animate-spin" : ""} />
+              {refreshing ? "Updating..." : "Refresh"}
+            </button>
+
             <button
               onClick={handlePrint}
               type="button"
@@ -241,13 +284,13 @@ export default function TributesPdfView({ tributes }: Props) {
             className="text-xs sm:text-sm font-medium"
             style={{ color: "#9B8E7B" }}
           >
-            A Complete Collection of Cherished Tributes & Condolences ({tributes.length} Messages)
+            A Complete Collection of Cherished Tributes & Condolences ({tributesList.length} Messages)
           </p>
         </section>
 
         {/* Tributes List */}
         <section className="space-y-5">
-          {tributes.map((tribute, idx) => (
+          {tributesList.map((tribute, idx) => (
             <article
               key={tribute.id || idx}
               className="tribute-entry rounded-2xl p-5 sm:p-7 shadow-sm transition-all"

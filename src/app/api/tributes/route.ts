@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 const DEFAULT_FALLBACK_TRIBUTES = [
   {
     id: "seed-1",
@@ -40,16 +43,28 @@ export async function GET() {
       }
     }
 
-    return NextResponse.json({
-      tributes,
-      total,
-    });
+    return NextResponse.json(
+      { tributes, total },
+      {
+        headers: {
+          "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+          "Pragma": "no-cache",
+        },
+      }
+    );
   } catch (error) {
     console.error("Error fetching tributes from DB:", error);
-    return NextResponse.json({
-      tributes: DEFAULT_FALLBACK_TRIBUTES,
-      total: DEFAULT_FALLBACK_TRIBUTES.length,
-    });
+    return NextResponse.json(
+      {
+        tributes: DEFAULT_FALLBACK_TRIBUTES,
+        total: DEFAULT_FALLBACK_TRIBUTES.length,
+      },
+      {
+        headers: {
+          "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+        },
+      }
+    );
   }
 }
 

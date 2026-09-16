@@ -38,11 +38,16 @@ export default function Tributes({
 
   const fetchTributes = useCallback(async () => {
     try {
-      const res = await fetch("/api/tributes");
+      const res = await fetch("/api/tributes?t=" + Date.now(), {
+        cache: "no-store",
+        headers: { "Cache-Control": "no-cache" },
+      });
       if (res.ok) {
         const data = await res.json();
-        setTributes(data.tributes);
-        setTotalCount(data.total);
+        if (data && data.tributes) {
+          setTributes(data.tributes);
+          setTotalCount(data.total);
+        }
       }
     } catch {
       // fail silently on fetch
@@ -51,6 +56,9 @@ export default function Tributes({
 
   useEffect(() => {
     fetchTributes();
+    // Live polling: automatically checks for newly submitted tributes every 8 seconds
+    const interval = setInterval(fetchTributes, 8000);
+    return () => clearInterval(interval);
   }, [fetchTributes]);
 
   useEffect(() => {
